@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renato — Self-taught Developer</title>
+<meta name="description" content="Self-taught developer who builds tools that connect hardware and code. Author of synology-api, the most used Python wrapper for the Synology API.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080d;
+    --bg-soft: #101018;
+    --card: rgba(255,255,255,0.03);
+    --card-border: rgba(255,255,255,0.08);
+    --text: #f5f5f7;
+    --muted: #9a9aa8;
+    --accent: #6366f1;
+    --accent-2: #22d3ee;
+    --green: #34d399;
+    --gold: #fbbf24;
+    --grad: linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* animated background grid + glow */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+  .bg-glow {
+    position: fixed; top: -20%; left: 50%; transform: translateX(-50%);
+    width: 1000px; height: 650px; z-index: 0; pointer-events: none;
+    background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 65%);
+    filter: blur(10px);
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* nav */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0; position: relative;
+  }
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; font-size: 17px;
+    background: var(--grad);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  nav ul { display: flex; gap: 28px; list-style: none; align-items: center; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+  nav a:hover { color: var(--text); }
+  .hamburger {
+    display: none; background: var(--card); border: 1px solid var(--card-border);
+    color: var(--text); width: 42px; height: 42px; border-radius: 10px; cursor: pointer;
+    font-size: 20px; align-items: center; justify-content: center;
+  }
+  .mobile-menu {
+    display: none; flex-direction: column; gap: 4px;
+    background: var(--bg-soft); border: 1px solid var(--card-border);
+    border-radius: 14px; padding: 12px; margin-top: 8px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { padding: 12px 14px; border-radius: 10px; color: var(--text); text-decoration: none; font-size: 15px; }
+  .mobile-menu a:hover { background: var(--card); }
+
+  /* hero */
+  .hero { padding: 84px 0 56px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--muted);
+    padding: 6px 14px; border-radius: 999px;
+    background: var(--card); border: 1px solid var(--card-border);
+    margin-bottom: 26px;
+  }
+  .badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  h1 { font-size: clamp(38px, 7vw, 66px); font-weight: 900; letter-spacing: -0.03em; line-height: 1.06; }
+  h1 .grad {
+    background: var(--grad); background-size: 200% 200%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradshift 6s ease infinite;
+  }
+  @keyframes gradshift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .tagline { font-size: clamp(17px, 2.2vw, 20px); color: var(--muted); margin-top: 20px; max-width: 660px; font-weight: 400; }
+  .cta { display: flex; gap: 14px; margin-top: 34px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 26px; border-radius: 12px; text-decoration: none;
+    font-size: 15px; font-weight: 600; transition: transform .15s, box-shadow .15s;
+  }
+  .btn-primary { background: var(--grad); color: #fff; box-shadow: 0 8px 30px rgba(99,102,241,0.35); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(99,102,241,0.5); }
+  .btn-ghost { background: var(--card); border: 1px solid var(--card-border); color: var(--text); }
+  .btn-ghost:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.22); }
+
+  /* currently */
+  .currently-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  .now-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 14px; padding: 22px;
+  }
+  .now-card .tag {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 6px; margin-bottom: 12px;
+  }
+  .now-card .tag.building { color: var(--accent-2); background: rgba(34,211,238,0.1); }
+  .now-card .tag.exploring { color: var(--green); background: rgba(52,211,153,0.1); }
+  .now-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .now-card p { font-size: 14px; color: var(--muted); }
+
+  /* sections */
+  section { padding: 58px 0; }
+  .section-head { margin-bottom: 34px; }
+  .section-head .kicker { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-2); letter-spacing: 0.14em; text-transform: uppercase; }
+  .section-head h2 { font-size: clamp(26px, 4vw, 34px); font-weight: 800; letter-spacing: -0.02em; margin-top: 6px; }
+
+  /* about */
+  .about { color: var(--muted); font-size: 17px; max-width: 780px; }
+  .about strong { color: var(--text); font-weight: 600; }
+  .about .highlight {
+    color: var(--text);
+    background: linear-gradient(120deg, rgba(99,102,241,0.18), rgba(34,211,238,0.18));
+    border-radius: 4px; padding: 0 5px;
+  }
+
+  /* projects */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+  .card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 26px; text-decoration: none; color: var(--text);
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+    display: flex; flex-direction: column; gap: 12px;
+    backdrop-filter: blur(10px);
+  }
+  .card:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.45); box-shadow: 0 16px 44px rgba(0,0,0,0.45); }
+  .card .title-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .card h3 { font-size: 18px; font-weight: 700; }
+  .card .stars { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--gold); white-space: nowrap; }
+  .card p { font-size: 14px; color: var(--muted); flex: 1; }
+  .card .lang {
+    align-self: flex-start; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+    padding: 3px 10px; border-radius: 6px; background: rgba(255,255,255,0.05); color: var(--muted);
+  }
+
+  /* skills */
+  .skills { display: flex; flex-wrap: wrap; gap: 10px; }
+  .skill {
+    font-size: 14px; font-weight:500; padding: 9px 18px; border-radius: 10px;
+    background: var(--card); border: 1px solid var(--card-border); transition: border-color .2s, transform .2s;
+  }
+  .skill:hover { border-color: rgba(99,102,241,0.5); transform: translateY(-2px); }
+  .skill-group { margin-bottom: 26px; }
+  .skill-group:last-child { margin-bottom: 0; }
+  .skill-group h3 {
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* contact / social */
+  .social { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .social-card {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 14px; padding: 18px; text-decoration: none; color: var(--text);
+    transition: transform .2s, border-color .2s;
+  }
+  .social-card:hover { transform: translateY(-3px); border-color: rgba(99,102,241,0.45); }
+  .social-card .icon {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--grad); font-size: 22px;
+  }
+  .social-card .meta { display: flex; flex-direction: column; min-width: 0; }
+  .social-card .meta .label { font-size: 14px; font-weight: 600; }
+  .social-card .meta .handle { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  footer { padding: 36px 0 56px; border-top: 1px solid var(--card-border); margin-top: 36px; }
+  footer .foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+  footer p { color: var(--muted); font-size: 13px; }
+
+  /* scroll reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* responsive */
+  @media (max-width: 720px) {
+    nav ul { display: none; }
+    .hamburger { display: flex; }
+    .hero { padding: 56px 0 40px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<div class="wrap">
+  <nav>
+    <span class="logo">~/$ renato</span>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" onclick="toggleMenu()">About</a>
+    <a href="#projects" onclick="toggleMenu()">Projects</a>
+    <a href="#skills" onclick="toggleMenu()">Skills</a>
+    <a href="#contact" onclick="toggleMenu()">Contact</a>
+  </div>
+
+  <header class="hero reveal">
+    <div class="badge"><span class="dot"></span> Available for projects</div>
+    <h1>Self-taught developer who<br>builds <span class="grad">tools that connect<br>hardware and code.</span></h1>
+    <p class="tagline">
+      Marine mechanical engineer turned self-taught developer. I create Python libraries,
+      Home Assistant integrations and automation tools used by thousands of people.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#projects">View my work</a>
+      <a class="btn btn-ghost" href="https://github.com/N4S4" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </header>
+
+  <section class="currently reveal">
+    <div class="section-head">
+      <div class="kicker">Now</div>
+      <h2>What I'm up to</h2>
+    </div>
+    <div class="currently-grid">
+      <div class="now-card">
+        <span class="tag building">Building</span>
+        <h3>SynoDock</h3>
+        <p>A multi-NAS dashboard that brings every Synology box into one panel. Because DSM still only manages one at a time.</p>
+      </div>
+      <div class="now-card">
+        <span class="tag exploring">Exploring</span>
+        <h3>One interface for every 3D printer</h3>
+        <p>A container that unifies 3D printers of different brands under a single interface. Every slicer thinks it's the center of the universe.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="reveal">
+    <div class="section-head">
+      <div class="kicker">01 · About</div>
+      <h2>From the sea to the stack</h2>
+    </div>
+    <p class="about">
+      I am a <strong>marine mechanical engineer</strong> who taught himself to program. My background gives me
+      something most developers don't have: I understand the physical machines behind the software.
+      <br><br>
+      I am the author of <span class="highlight">synology-api</span>, the most widely used Python wrapper for the
+      Synology NAS API. I build tools that solve real
+      problems: <strong>automation</strong>, <strong>home infrastructure</strong>, <strong>integrations between
+      hardware and software</strong>.
+      <br><br>
+      Outside of code I am an enthusiast of microcontrollers, robotics and 3D printing. I like making machines
+      talk to each other, and I enjoy writing clear technical documentation that lets other people do the same.
+    </p>
+  </section>
+
+  <section id="case-study" class="reveal">
+    <div class="section-head">
+      <div class="kicker">Case study</div>
+      <h2>How synology-api was born</h2>
+    </div>
+    <p class="about">
+      I needed to automate jobs on my NAS: backups, monitoring, file operations, and some boring
+      maintenance nobody wants to click through a web UI for. There wasn't a complete Python wrapper
+      for the Synology API, so I wrote one.
+      <br><br>
+      It started as a tool for my own automation. The community and I kept adding modules until it
+      covered almost the entire DSM surface, and it became what it is now.
+      <br><br>
+      Today <span class="highlight">synology-api</span> is the most widely used Python wrapper for the
+      Synology NAS API, with projects building on top of it. The lesson I keep coming back to: <strong>build
+      the tool you wish existed, and solve your own problem first.</strong> If it helps you, it usually helps
+      someone else too.
+    </p>
+  </section>
+
+  <section id="projects" class="reveal">
+    <div class="section-head">
+      <div class="kicker">02 · Projects</div>
+      <h2>Things I've built</h2>
+    </div>
+    <div class="grid">
+      <a class="card" href="https://github.com/N4S4/synology-api" target="_blank" rel="noopener">
+        <div class="title-row"><h3>synology-api</h3><span class="stars" data-repo="synology-api" hidden></span></div>
+        <p>The Python wrapper around the Synology API. Covers almost the entire DSM surface, used by projects around the world.</p>
+        <span class="lang">Python</span>
+      </a>
+      <a class="card" href="https://github.com/N4S4/homeassistant-synology-pro" target="_blank" rel="noopener">
+        <div class="title-row"><h3>homeassistant-synology-pro</h3><span class="stars" data-repo="homeassistant-synology-pro" hidden></span></div>
+        <p>Custom Home Assistant integration exposing Synology NAS sensors, switches and binary sensors natively through synology-api.</p>
+        <span class="lang">Python</span>
+      </a>
+      <a class="card" href="https://github.com/N4S4/synology-api-telegram-bot" target="_blank" rel="noopener">
+        <div class="title-row"><h3>synology-api-telegram-bot</h3><span class="stars" data-repo="synology-api-telegram-bot" hidden></span></div>
+        <p>Control and monitor your Synology NAS directly from Telegram. Interact with the whole DSM through chat commands.</p>
+        <span class="lang">Python</span>
+      </a>
+      <a class="card" href="https://github.com/N4S4/synology-api-recipes" target="_blank" rel="noopener">
+        <div class="title-row"><h3>synology-api-recipes</h3><span class="stars" data-repo="synology-api-recipes" hidden></span></div>
+        <p>Production-ready Python recipes for Synology NAS automation: disk health, backups, monitoring and maintenance.</p>
+        <span class="lang">Python</span>
+      </a>
+    </div>
+  </section>
+
+  <section id="skills" class="reveal">
+    <div class="section-head">
+      <div class="kicker">03 · Skills</div>
+      <h2>What I work with</h2>
+    </div>
+    <div class="skill-group">
+      <h3>Software</h3>
+      <div class="skills">
+        <span class="skill">Python</span>
+        <span class="skill">Home Assistant</span>
+        <span class="skill">Docker</span>
+        <span class="skill">FastAPI</span>
+        <span class="skill">REST APIs</span>
+        <span class="skill">Automation</span>
+        <span class="skill">Documentation</span>
+        <span class="skill">Linux</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h3>Hardware &amp; Making</h3>
+      <div class="skills">
+        <span class="skill">3D Printing</span>
+        <span class="skill">Arduino</span>
+        <span class="skill">ESP32</span>
+        <span class="skill">ESPHome</span>
+        <span class="skill">Raspberry Pi</span>
+        <span class="skill">3D Scanner</span>
+        <span class="skill">Laser Engraver</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h3>Engineering</h3>
+      <div class="skills">
+        <span class="skill">Mechanical Parts Engineering</span>
+        <span class="skill">3D Drawing</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="reveal">
+    <div class="section-head">
+      <div class="kicker">04 · Contact</div>
+      <h2>Let's talk</h2>
+    </div>
+    <div class="social">
+      <a class="social-card" href="https://github.com/N4S4" target="_blank" rel="noopener">
+        <div class="icon">⌥</div>
+        <div class="meta"><span class="label">GitHub</span><span class="handle">github.com/N4S4</span></div>
+      </a>
+      <a class="social-card" href="https://www.linkedin.com/in/renatovisaggio" target="_blank" rel="noopener">
+        <div class="icon">💼</div>
+        <div class="meta"><span class="label">LinkedIn</span><span class="handle">Linkedin</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot">
+      <p>No frameworks were harmed in the making of this page. Just HTML, a text editor, and an unhealthy amount of coffee.</p>
+      <p>© 2026</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  // scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // live star counts from GitHub API (no auth, badge stays hidden on failure)
+  document.querySelectorAll('.stars[data-repo]').forEach(el => {
+    const repo = el.getAttribute('data-repo');
+    fetch('https://api.github.com/repos/N4S4/' + repo)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        el.textContent = '★ ' + d.stargazers_count;
+        el.hidden = false;
+      })
+      .catch(() => { /* keep hidden */ });
+  });
+</script>
+</body>
+</html>
